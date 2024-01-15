@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1 th:if="${book != null}" th:text="${book.getFullName() + ', ' + book.getAuthor() + ', ' + book.getAge()}"></h1>
+
+<div th:if="${book != null && book.getPerson() == null}">
+    <p>Эта книга свободна. Кому назначить ее?</p>
+    <form th:action="@{'/books/' + ${book.id}}" method="POST">
+        <label for="selectPerson">Выберите человека:</label>
+        <select id="selectPerson" name="selectedPerson">
+            <option th:each="person : ${people}" th:value="${person.getId()}" th:text="${person.getFullName()}"></option>
+        </select>
+        <button type="submit">Назначить</button>
+    </form>
+</div>
+
+<div th:if="${book != null && book.getPerson() != null}">
+    <label th:if="${book.getPerson() != null}" th:text="'Книга сейчас у: ' + ${book.getPerson().getFullName()}"></label>
+    <form method="post" th:action="@{'/books/' + ${book.getId()} + '/osvo'}">
+        <button type="submit">Освободить книгу</button>
+    </form>
+</div>
+
+<a th:if="${book != null}" th:href="@{'/books/' + ${book.getId()} + '/edit'}">
+    <button>edit</button>
+</a>
+
+<form th:if="${book != null}" method="post" th:action="@{'/books/' + ${book.getId()} + '/del'}">
+    <button type="submit">delete</button>
+</form>
+</body>
+</html>
